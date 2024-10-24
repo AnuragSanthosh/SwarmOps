@@ -39,7 +39,8 @@ useEffect(() => {
   if (error) {
     return <div className="text-red-500 text-center mt-4">Error: {error}</div>;
   }
-
+  
+  const length = Object.keys(servicesData).length;
   return (
     <div>
       <div class="flex justify-between items-center">
@@ -52,7 +53,7 @@ useEffect(() => {
 
         <div class="flex flex-col mt-2 items-center mr-4">
           <span class="text-xs xs:text-sm text-gray-900 mb-1">
-            Showing 1 to 4 of 50 Entries
+            Showing {length} Services
           </span>
           <div className="flex mt-2 gap-1">
             <button class="text-sm bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-l">
@@ -102,17 +103,12 @@ useEffect(() => {
               <th scope="col" class="px-6 py-3 text-base">
                 ID
               </th>
-              <th scope="col" class="px-6 py-3 text-base">
-                Creation Time
-              </th>
+              
               <th scope="col" class="px-6 py-3 text-base">
                 Desired State
               </th>
               <th scope="col" class="px-6 py-3 text-base">
                 Image Name
-              </th>
-              <th scope="col" class="px-6 py-3 text-base">
-                Labels
               </th>
               <th scope="col" class="px-6 py-3 text-base">
                 Port Number
@@ -134,6 +130,9 @@ useEffect(() => {
               </th>
               <th scope="col" class="px-6 py-3 text-base"></th>
               <th scope="col" class="px-6 py-3 text-base"></th>
+              <th scope="col" class="px-6 py-3 text-base">
+                Creation Time
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -154,12 +153,7 @@ useEffect(() => {
     >
       {data.ID ?? "Null"}
     </td>
-    <td
-      scope="row"
-      className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-    >
-      {data.CreatedAt ?? "Null"}
-    </td>
+    
     <td
       scope="row"
       className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
@@ -181,13 +175,7 @@ useEffect(() => {
       scope="row"
       className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
     >
-      {data.Endpoint?.Ports?.[0]?.PublishedPort ?? "Null"}
-    </td>
-    <td
-      scope="row"
-      className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-    >
-      {data.Endpoint?.Ports?.[0]?.TargetPort ?? "Null"}
+      {(data.Endpoint?.Ports?.[0]?.PublishedPort + ":" + data.Endpoint?.Ports?.[0]?.TargetPort)?? "Null"}
     </td>
     <td
       scope="row"
@@ -221,6 +209,12 @@ useEffect(() => {
       <button className="flex items-center justify-center text-red-600 hover:text-red-800">
         <FontAwesomeIcon icon={faTrash} className="mr-2" />
       </button>
+    </td>
+    <td
+      scope="row"
+      className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+    >
+      {data.CreatedAt ?? "Null"}
     </td>
   </tr>
 ))}
