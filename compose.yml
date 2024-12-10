@@ -5,13 +5,16 @@ services:
       context: ./frontend  # Specify the build context
     ports:
       - '8001:80'  # Exposes the frontend on port 8001
-    depends_on:
-      - backend  # Ensures that the backend service starts before the frontend
     volumes:
       - ./frontend:/app  # Mounts the local frontend directory to /app in the container for live updates
+    depends_on:
+      - backend  # Ensures that the backend service starts before the frontend
+      # - db
+
+    # Docker Compose Watch
     develop:
       watch:
-        - action: rebuild
+        - action: rebuild # rebuild image with updated code
           path: ./frontend
           target: /app
 
@@ -21,13 +24,17 @@ services:
       context: ./backend  # Specify the build context
     ports:
       - '8002:5000'  # Exposes the backend on port 8002
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock  # Allows the backend to access Docker socket
+    
+    # Docker Compose Watch
     develop:
       watch:
-        - action: sync+restart
+        - action: sync+restart # copy code to container and restart container
           path: ./backend
           target: /app
+    
+    # Docker Swarm related conf
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # Allows the backend to access Docker socket
     deploy:
       placement:
         constraints:
@@ -37,8 +44,15 @@ services:
   proxy:
     build: ./proxy
     ports: ['8090:80']
+    
+    # Docker Compose Watch
     develop:
       watch: 
-        - action: sync+restart
+        - action: sync+restart # copy code to container and restart container
           path: ./proxy/default.conf
           target: /etc/nginx/conf.d
+
+  # db:
+  #   image: mongo
+    # volumes:
+    #   - 
